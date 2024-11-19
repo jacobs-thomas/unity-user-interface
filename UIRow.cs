@@ -2,44 +2,44 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace UserInterface
+namespace LG.UserInterface.Layouts
 {
     [ExecuteInEditMode]
     public class UIRow : UIContent
     {
-        public override void OnScaleChildrenUpdate()
-        {
-            for (int i = 0; i < UIChildren.Length; i++)
-            {
-                ScaleChild(UIChildren[i], i);
-            }
-        }
+        /**
+        * UIRow is a custom layout class for arranging UIContent elements horizontally.
+        * It evenly distributes child elements along the horizontal axis, adjusting their scale and position
+        * to fit within the parent container's width.
+        */
 
-        public void ScaleChild(UIContent child, int position)
+
+        // Methods:
+        public override void OnScaleChild(UIContent child, int position)
         {
+            /**
+            * Scales and positions a specific child element within the row based on its position index.
+            * Ensures each child is proportionally scaled and placed to maintain a consistent layout.
+            *
+            * @param child The child UIContent element to be scaled and positioned.
+            * @param position The index of the child element within the row.
+            */
+
+
+            // Get the total width of the container and calculate each child's width.
             float totalWidth = RectangleTransform.rect.width;
             float width = totalWidth / UIChildren.Length;
             float height = RectangleTransform.rect.height;
 
-            // Calculate starting position for centering
+            // Calculate the starting X position for centering the row layout.
             float startX = -totalWidth / 2 + width / 2;
 
-            // Set the child's size to match the parent's width and height
+            // Set the size of the child element to match the parent's calculated width and height.
             child.RectangleTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, width);
             child.RectangleTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, height);
 
-            // Position the child with proper centering and offset
+            // Position the child element at the correct offset within the row.
             child.RectangleTransform.localPosition = new Vector3(startX + (width * position), 0.0f, 0.0f);
-        }
-
-        public override void OnScaleChildUI(UIContent child)
-        {
-            // Set the child's width and height to match the parent's width and height, while respecting anchors.
-            child.RectangleTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, RectangleTransform.rect.width);
-            child.RectangleTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, RectangleTransform.rect.height);
-
-            // Optionally, you could reset the localPosition to ensure it stays within the bounds.
-            child.RectangleTransform.localPosition = Vector3.zero;  // You can modify this if you need specific positioning behavior
         }
     }
 }

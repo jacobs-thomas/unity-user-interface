@@ -4,7 +4,7 @@ using UnityEngine;
 
 #nullable enable
 
-namespace UserInterface
+namespace LG
 {
     [ExecuteInEditMode]
     [RequireComponent(typeof(RectTransform))]

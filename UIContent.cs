@@ -5,7 +5,7 @@ using UnityEngine;
 
 #nullable enable
 
-namespace UserInterface
+namespace LG.UserInterface.Layouts
 {
     [System.Serializable]
     public struct Style
@@ -100,11 +100,11 @@ namespace UserInterface
             {
                 if (!_uiContentChildren[i].inheritRect) { continue; }
 
-                OnScaleChildUI(_uiContentChildren[i]);
+                OnScaleChild(_uiContentChildren[i], i);
             }
         }
 
-        public virtual void OnScaleChildUI(UIContent child)
+        public virtual void OnScaleChild(UAddedIContent child, int position)
         {
             // Set the child's width and height to match the parent's width and height, while respecting anchors.
             child.RectangleTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, Width);

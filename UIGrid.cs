@@ -2,32 +2,41 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace UserInterface
+namespace LG.UserInterface.Layouts
 {
     public class UIGrid : UIContent
     {
+        /**
+        * UIGrid is a custom layout class for arranging UIContent elements in a grid format.
+        * It scales and positions child elements evenly within a defined number of rows and columns.
+        */
+
+
         // Instance attributes:
         public uint numberOfColumns = 1;
         public uint numberOfRows = 1;
 
+
         // Methods:
-        public override void OnScaleChildrenUpdate()
+        public override void OnScaleChild(UIContent child, int position)
         {
-            for (int i = 0; i < UIChildren.Length && i < (numberOfRows * numberOfColumns); i++)
-            {
-                ScaleChild(UIChildren[i], i);
-            }
-        }
-
-        public void ScaleChild(UIContent child, int position)
-        {
-            int row = position / (int)numberOfRows;
-            int column = position % (int)numberOfRows;
+            /**
+            * Scales and positions a specific child element within the grid based on its position index.
+            *
+            * @param child The child UIContent element to be scaled and positioned.
+            * @param position The index of the child element within the grid.
+            */
 
 
-            float totalWidth = RectangleTransform.rect.width;
-            float totalHeight = RectangleTransform.rect.height;
+            // Determine the row and column based on the position.
+            int row = position / (int)numberOfColumns;
+            int column = position % (int)numberOfColumns;
 
+            // Calculate the total available width and height for the grid.
+            float totalWidth = Width;
+            float totalHeight = Height;
+
+            // Calculate the width and height of each grid cell.
             float width = totalWidth / numberOfColumns;
             float height = totalHeight / numberOfRows;
 
@@ -41,16 +50,6 @@ namespace UserInterface
 
             // Position the child with proper centering and offset
             child.RectangleTransform.localPosition = new Vector3(startX + (width * column), startY + (height * row), 0.0f);
-        }
-
-        public override void OnScaleChildUI(UIContent child)
-        {
-            // Set the child's width and height to match the parent's width and height, while respecting anchors.
-            child.RectangleTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, RectangleTransform.rect.width);
-            child.RectangleTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, RectangleTransform.rect.height);
-
-            // Optionally, you could reset the localPosition to ensure it stays within the bounds.
-            child.RectangleTransform.localPosition = Vector3.zero;  // You can modify this if you need specific positioning behavior
         }
     }
 }
