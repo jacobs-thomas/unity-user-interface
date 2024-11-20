@@ -14,7 +14,48 @@ namespace LG.UserInterface.Layouts
         */
 
 
+        // Instance attributes:
+        [SerializeField] private float _gap = 0.0f;
+
+
+        // Properties:
+        public float Gap
+        {
+            get => _gap;
+            set
+            {
+                _gap = Mathf.Clamp(value, 0, Width / 2);
+            }
+        }
+
+
         // Methods:
+        public override void OnScaleChildrenUpdate(UIContent[] children)
+        {
+            float totalSpacing = (Mathf.Max(children.Length - 1, 0)) * _gap;
+            float totalHeight = RectangleTransform.rect.height - totalSpacing;
+
+
+            for (int i = 0; i < children.Length; i++)
+            {
+                // Get the total width of the container and calculate each child's width.
+                float height = totalHeight / UIChildren.Length;
+                float width = RectangleTransform.rect.width;
+
+                // Calculate the starting X position for centering the row layout.
+                float startY = -RectangleTransform.rect.height / 2 + height / 2;
+
+                // Set the size of the child element to match the parent's calculated width and height.
+                children[i].RectangleTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, width);
+                children[i].RectangleTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, height);
+
+                // Calculate position
+                float YOffset = startY + i * (height + _gap); // Adjust for width and spacing.
+                Vector3 position = new Vector3(0.0f, YOffset, 0.0f);
+                children[i].RectangleTransform.localPosition = position;
+            }
+        }
+
         public override void OnScaleChild(UIContent child, int position)
         {
             /**

@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace LG.UserInterface.Layouts
@@ -14,7 +12,46 @@ namespace LG.UserInterface.Layouts
         */
 
 
+        // Instance attributes:
+        [SerializeField] private float _gap = 0.0f;
+
+        // Properties:
+        public float Gap
+        {
+            get => _gap;
+            set
+            {
+                _gap = Mathf.Clamp(value, 0, Width / 2);
+            }
+        }
+
         // Methods:
+        public override void OnScaleChildrenUpdate(UIContent[] children)
+        {
+            float totalSpacing = (Mathf.Max(children.Length - 1, 0)) * _gap;
+            float totalWidth = RectangleTransform.rect.width - totalSpacing;
+
+
+            for (int i = 0; i < children.Length; i++)
+            {
+                // Get the total width of the container and calculate each child's width.
+                float width = totalWidth / UIChildren.Length;
+                float height = RectangleTransform.rect.height;
+
+                // Calculate the starting X position for centering the row layout.
+                float startX = -RectangleTransform.rect.width / 2 + width / 2;
+
+                // Set the size of the child element to match the parent's calculated width and height.
+                children[i].RectangleTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, width);
+                children[i].RectangleTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, height);
+
+                // Calculate position
+                float xOffset = startX + i * (width + _gap); // Adjust for width and spacing.
+                Vector3 position = new Vector3(xOffset, 0.0f, 0.0f);
+                children[i].RectangleTransform.localPosition = position;
+            }
+        }
+
         public override void OnScaleChild(UIContent child, int position)
         {
             /**

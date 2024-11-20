@@ -92,7 +92,7 @@ namespace LG.UserInterface.Layouts
         // Methods:
         private void Update()
         {
-            OnScaleChildrenUpdate();
+            OnScaleChildrenUpdate(_uiContentChildren);
         }
 
         public void OnTransformChildrenChanged()
@@ -123,7 +123,7 @@ namespace LG.UserInterface.Layouts
             _uiContentChildren = immediateChildren.ToArray();
         }
 
-        public virtual void OnScaleChildrenUpdate()
+        public virtual void OnScaleChildrenUpdate(UIContent[] children)
         {
             /**
             * Updates the scale and position of all child elements that inherit the RectTransform.
@@ -139,7 +139,7 @@ namespace LG.UserInterface.Layouts
             }
         }
 
-        public virtual void OnScaleChild(UAddedIContent child, int position)
+        public virtual void OnScaleChild(UIContent child, int position)
         {
             /**
             * Scales and positions a single child element based on its index in the array.
