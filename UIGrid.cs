@@ -13,11 +13,72 @@ namespace LG.UserInterface.Layouts
 
 
         // Instance attributes:
+        [SerializeField] private float _gap = 0.0f;
+
+
+        // Properties:
+        public float Gap
+        {
+            get => _gap;
+            set
+            {
+                _gap = Mathf.Clamp(value, 0, Width / 2);
+            }
+        }
+
+
+        // Instance attributes:
         public uint numberOfColumns = 1;
         public uint numberOfRows = 1;
 
 
         // Methods:
+        public override void OnScaleChildrenUpdate(UIContent[] children)
+        {
+
+
+            // Width:
+            float totalSpacingWidth = (Mathf.Max(numberOfColumns - 1, 0)) * _gap;
+            float totalWidth = Width - totalSpacingWidth;
+
+            // Height:
+            float totalSpacingHeight = (Mathf.Max((int)(children.Length / numberOfRows) - 1, 0)) * _gap;
+            float totalHeight = Height - totalSpacingHeight;
+
+
+            for (int i = 0; i < children.Length; i++)
+            {
+                // Determine the row and column based on the position.
+                int row = i / (int)numberOfColumns;
+                int column = i % (int)numberOfColumns;
+
+                // Calculate the width and height of each grid cell.
+                float width = totalWidth / numberOfColumns;
+                float height = totalHeight / numberOfRows;
+
+                // Calculate the starting X position for centering the row layout.
+                // float startX = -RectangleTransform.rect.width / 2 + width / 2;
+                // float startY = -RectangleTransform.rect.height / 2 + height / 2;
+
+                // Calculate starting position for centering
+                float startX = -Width / 2+ (width / 2);
+                float startY = -Height / 2+ (height / 2);
+
+
+
+                // Set the size of the child element to match the parent's calculated width and height.
+                children[i].RectangleTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, width);
+                children[i].RectangleTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, height);
+
+                // Calculate position
+                float xOffset = startX + column * (width + _gap); // Adjust for width and spacing.
+                float YOffset = startY + row * (height + _gap); // Adjust for width and spacing.
+                Vector3 position = new Vector3(xOffset, YOffset, 0.0f);
+                children[i].RectangleTransform.localPosition = position;
+            }
+        }
+
+
         public override void OnScaleChild(UIContent child, int position)
         {
             /**
